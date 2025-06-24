@@ -12,16 +12,22 @@
 <body>
     <div class="container" id="signIn">
         <h1>Sign In</h1>
+        <?php
+            if (isset($_GET['error'])) {
+                echo '<div class="error-message" style="color:red; margin-bottom:10px; text-align:center; font-size:20px;">'.htmlspecialchars($_GET['error']).'</div>';
+            }
+            if (isset($_GET['success'])) {
+                echo '<div class="success-message" style="color:green; margin-bottom:10px; text-align:center; font-size:20px;">'.htmlspecialchars($_GET['success']).'</div>';
+            }
+        ?>
         <form method="post" action="register.php">
             <div class="input-group">
                 <input type="email" name="email" id="email" placeholder="Email" required>
-                <!-- <label for="email">Email</label> -->
                 <i class="fa-solid fa-envelope"></i>
             </div>
 
             <div class="input-group">
-                <input type="password" id="password" placeholder="Password" required>
-                <!-- <label for="password">Password</label> -->
+                <input type="password" id="password" name="password" placeholder="Password" required>
                 <i class="fa-solid fa-lock"></i>
             </div>
 
@@ -82,7 +88,7 @@
 
                 <div class="input-group">
                     <i class="fas fa-lock"></i>
-                    <input type="password" id="password" placeholder="Password" required>
+                    <input type="password" id="password" name="password" placeholder="Password" required>
                 </div>
             </div>
 

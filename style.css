@@ -195,3 +195,7 @@ body {
 .links p a:hover {
   text-decoration: underline;
 }
+.error-message, .success-message {
+    text-align: center;
+    font-size: 20px;
+}
