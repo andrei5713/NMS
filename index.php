@@ -33,7 +33,6 @@
 
             <div class="remember-forgot">
                 <label><input type="checkbox">Remember me</label>
-                <a href="#">Forgot Password?</a>
             </div>
 
             <input type="submit" class="btn" value="Sign In" name="signIn">
