@@ -71,15 +71,8 @@ if (isset($_GET['edit_id'])) {
 
 
 <div class="action-buttons">
-    <!-- BUTTON FOR TABLE OF INVENTORIES, inventoryTable Container -->
-    <button id="showTableBtn" class="action-btn btn-table">
-        Table of Inventories
-    </button>
-
-    <!-- BUTTON FOR INSERT DATA, welcome CONTAINER -->
-    <button id="showFormBtn" class="action-btn btn-insert">
-        Insert Data
-    </button>
+    <button id="showTableBtn" class="action-btn btn-table">Table of Inventories</button>
+    <button id="showFormBtn" class="action-btn btn-insert">Insert Data</button>
 </div>
 
 <!-- Pag pindot mo ng Table of Inventories button, magbubukas ang Container na ito -->
@@ -110,37 +103,39 @@ if (isset($_GET['edit_id'])) {
         </select>
 
 
-        <!-- Search Bar -->
-        <input type="text" id="searchInput" placeholder="Search Name of User...">
+        <!-- Updated search bar -->
+        <input type="text" id="searchInput" placeholder="Search Name or IP Address...">
     </div>
 
     <!-- ito yung display ng table sa mga list of users na na-encode -->
-    <table border="1" cellpadding="10" cellspacing="0">
-        <thead>
-            <tr>
-                <th>Name of User</th>
-                <!-- No need to show IP address header -->
-            </tr>
-        </thead>
+    <div class="table-wrapper">
+        <table border="1" cellpadding="10" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Name of User</th>
+                    <!-- No need to show IP address header -->
+                </tr>
+            </thead>
 
-        <tbody>
-            <?php
-            $query = "SELECT id, nameofuser, department, ipaddress FROM inventory";
+            <tbody>
+                <?php
+                $query = "SELECT id, nameofuser, department, ipaddress FROM inventory ORDER BY id DESC";
 
-            $result = mysqli_query($conn, $query);
+                $result = mysqli_query($conn, $query);
 
-            if (mysqli_num_rows($result) > 0) {
-                while ($row = mysqli_fetch_assoc($result)) {
-                    echo "<tr data-department='" . htmlspecialchars($row['department']) . "' data-ip='" . htmlspecialchars($row['ipaddress']) . "'>
+                if (mysqli_num_rows($result) > 0) {
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        echo "<tr data-department='" . htmlspecialchars($row['department']) . "' data-ip='" . htmlspecialchars($row['ipaddress']) . "'>
         <td><a href='homepage.php?id=" . $row['id'] . "'>" . htmlspecialchars($row['nameofuser']) . "</a></td>
       </tr>";
+                    }
+                } else {
+                    echo "<tr><td>No records found.</td></tr>";
                 }
-            } else {
-                echo "<tr><td>No records found.</td></tr>";
-            }
-            ?>
-        </tbody>
-    </table>
+                ?>
+            </tbody>
+        </table>
+    </div>
 </div>
 
 <!-- Pag click mo sa kahit sinong users, mag sho-show yung full details of inventories nya -->
