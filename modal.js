@@ -66,16 +66,50 @@ closeModal.onclick = function() {
 
 // When the user clicks on "Submit Data" button, submit the form
 document.getElementById("submitDataButton").onclick = function(e) {
-    e.preventDefault(); // Prevent default if using JS-based submission
+    e.preventDefault();
+    
+    const form = document.getElementById("inventoryForm");
+    const formData = new FormData(form);
 
-    // Submit the form via JS or your existing process
-    document.getElementById("inventoryForm").submit();
-
-    // Then clear the form fields manually
-    clearFormFields();
-
-    // Optionally close the modal
-    modal.style.display = "none";
+    fetch('insert_data.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Get table body
+            const tbody = document.querySelector("#inventoryTable tbody");
+            const newRow = document.createElement('tr');
+            
+            // Set department and IP data attributes
+            newRow.setAttribute('data-department', formData.get('department'));
+            newRow.setAttribute('data-ip', formData.get('ipaddress'));
+            
+            // Create the row HTML
+            newRow.innerHTML = `
+                <td><a href="homepage.php?id=${data.newRow.id}">${data.newRow.nameofuser}</a></td>
+            `;
+            
+            // Insert at the beginning of the table
+            if (tbody.firstChild) {
+                tbody.insertBefore(newRow, tbody.firstChild);
+            } else {
+                tbody.appendChild(newRow);
+            }
+            
+            // Clear the form and close modal
+            clearFormFields();
+            modal.style.display = "none";
+            
+            // Show success message
+            alert("✅ Data inserted successfully!");
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert("Error inserting data");
+    });
 };
 
 
@@ -240,18 +274,22 @@ document.addEventListener("DOMContentLoaded", function () {
 
 //DEPARTMENT FILTERING
     function filterInventory() {
-        const searchValue = document.getElementById('searchInput').value.toLowerCase();
-        const departmentValue = document.getElementById('departmentFilter').value.toLowerCase();
+        const departmentFilter = document.getElementById('departmentFilter').value.toLowerCase();
+        const searchText = document.getElementById('searchInput').value.toLowerCase();
+        
         const rows = document.querySelectorAll('#inventoryTable tbody tr');
-    
-        rows.forEach(function(row) {
-            const name = row.querySelector('td').textContent.toLowerCase();
-            const department = row.getAttribute('data-department')?.toLowerCase() || "";
-    
-            const matchesSearch = name.includes(searchValue);
-            const matchesDepartment = departmentValue === "" || department === departmentValue;
-    
-            row.style.display = (matchesSearch && matchesDepartment) ? "" : "none";
+        
+        rows.forEach(row => {
+            const department = row.getAttribute('data-department').toLowerCase();
+            const name = row.querySelector('td:first-child').textContent.toLowerCase();
+            const ip = row.getAttribute('data-ip').toLowerCase();
+            
+            const matchesDepartment = !departmentFilter || department === departmentFilter;
+            const matchesSearch = !searchText || 
+                            name.includes(searchText) || 
+                            ip.includes(searchText);
+            
+            row.style.display = (matchesDepartment && matchesSearch) ? '' : 'none';
         });
     }
     
